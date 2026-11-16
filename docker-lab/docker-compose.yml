@@ -1,0 +1,55 @@
+services:
+  # Deliberately vulnerable web app for the local security lab.
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+
+  # Second deliberately vulnerable web app.
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports:
+      - "127.0.0.1:8081:80"
+    restart: unless-stopped
+
+  # Older web server image for Trivy image-vulnerability scanning.
+  # This is intentionally kept local and is not published to the network.
+  nginx-legacy:
+    image: nginx:1.14
+    container_name: nginx-legacy
+    profiles: ["legacy-targets"]
+    command: ["nginx", "-g", "daemon off;"]
+    ports:
+      - "127.0.0.1:8082:80"
+    restart: unless-stopped
+
+  # Older runtime images for Trivy scanning. These are optional and
+  # only start when the legacy-targets profile is enabled.
+  python-legacy:
+    image: python:3.7
+    container_name: python-legacy
+    profiles: ["legacy-targets"]
+    command: ["python", "-c", "import time; time.sleep(1000000)"]
+    restart: unless-stopped
+
+  node-legacy:
+    image: node:12
+    container_name: node-legacy
+    profiles: ["legacy-targets"]
+    command: ["node", "-e", "setInterval(() => {}, 1000)"]
+    restart: unless-stopped
+
+  # Database target representing a valuable internal lab asset.
+  # Optional: starts only with the database profile.
+  lab-db:
+    image: mariadb:10.6
+    container_name: lab-db
+    profiles: ["database"]
+    environment:
+      MARIADB_ROOT_PASSWORD: "LabOnly-ChangeMe-123!"
+      MARIADB_DATABASE: "labdb"
+    # Deliberately no host port mapping; reachable only inside Docker networks.
+    restart: unless-stopped

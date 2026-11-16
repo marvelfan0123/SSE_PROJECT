@@ -1,0 +1,17 @@
+Target inventory for the local Docker lab
+
+Web application targets:
+- OWASP Juice Shop: localhost:3000
+- DVWA: localhost:8081
+
+Optional network service target:
+- nginx:1.14: localhost:8082 (legacy-targets profile)
+
+Optional image scan targets:
+- python:3.7
+- node:12
+
+Optional internal database target:
+- MariaDB 10.6 (database profile; no host port published)
+
+Use Trivy for image CVEs and Nmap for reachable hosts/open ports/services.

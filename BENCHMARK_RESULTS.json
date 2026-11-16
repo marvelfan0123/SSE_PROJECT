@@ -1,0 +1,90 @@
+{
+  "model_status": "historical_legacy_diagnostic_0_100",
+  "active_canonical_engine": "vulngraph-contextual-risk-1.0 (0-10 scale)",
+  "canonical_formula": "R = 10 * [0.3 * (CVSS/10) + 0.7 * EPSS] * Reachability * (Criticality/5)",
+  "dataset": "controlled hypothetical scenarios (NOT actual CVEs)",
+  "case_count": 8,
+  "rows": [
+    {
+      "case": "critical-no-intelligence",
+      "base": 98.0,
+      "threat": 98.0,
+      "contextual": 98.0,
+      "priority": "Critical",
+      "confidence": "Provisional",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy"
+    },
+    {
+      "case": "critical-low-threat",
+      "base": 98.0,
+      "threat": 98.01,
+      "contextual": 98.01,
+      "priority": "Critical",
+      "confidence": "Partially Verified",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile, KEV status"
+    },
+    {
+      "case": "high-known-exploited",
+      "base": 75.0,
+      "threat": 90.75,
+      "contextual": 90.75,
+      "priority": "Critical",
+      "confidence": "Partially Verified",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile, KEV status"
+    },
+    {
+      "case": "medium-high-threat",
+      "base": 55.0,
+      "threat": 69.96,
+      "contextual": 69.96,
+      "priority": "High",
+      "confidence": "Partially Verified",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile, KEV status"
+    },
+    {
+      "case": "high-kev-no-epss",
+      "base": 80.0,
+      "threat": 87.0,
+      "contextual": 87.0,
+      "priority": "Critical",
+      "confidence": "Provisional",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, KEV status"
+    },
+    {
+      "case": "high-epss-no-kev",
+      "base": 80.0,
+      "threat": 86.65,
+      "contextual": 86.65,
+      "priority": "Critical",
+      "confidence": "Provisional",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile"
+    },
+    {
+      "case": "low-low-threat",
+      "base": 25.0,
+      "threat": 25.26,
+      "contextual": 25.26,
+      "priority": "Medium",
+      "confidence": "Partially Verified",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile, KEV status"
+    },
+    {
+      "case": "zero-severity",
+      "base": 0.0,
+      "threat": 0,
+      "contextual": 0,
+      "priority": "Low",
+      "confidence": "Partially Verified",
+      "threat_model": "Bounded evidence-aware additive (v3); CVSS or severity proxy, EPSS percentile, KEV status"
+    }
+  ],
+  "diagnostics": {
+    "severity_floor_preserved": true,
+    "kev_partial_enrichment_preserved": true,
+    "epss_partial_enrichment_preserved": true,
+    "kev_priority_floor": true,
+    "unknown_exposure_numeric_score": true,
+    "score_bounded": true,
+    "image_deduplication": true
+  }
+}

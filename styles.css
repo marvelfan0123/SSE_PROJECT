@@ -1,0 +1,1903 @@
+/* =============================================================================
+   VulnX Enterprise Design System — Wiz / CrowdStrike / Snyk Cybersecurity UI
+   Official Identity: Scanning and Vulnerability Management Platform (VulnX)
+   Tagline: Discover. Assess. Prioritize. Remediate.
+   ============================================================================= */
+
+:root {
+  --bg-main: #080D1A;
+  --bg-sidebar: #101827;
+  --bg-card: #151F32;
+  --bg-card-secondary: #1B263B;
+  --bg-card-hover: #1E2B45;
+  --border-color: #232F48;
+  --border-subtle: #182238;
+  --text-primary: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+  
+  --primary-blue: #4285FF;
+  --accent-violet: #795BFF;
+  --highlight-cyan: #35C6E8;
+  
+  /* Aliases for system compatibility */
+  --accent-indigo: #4285FF;
+  --accent-glow: rgba(66, 133, 255, 0.15);
+  
+  /* Severity Colors */
+  --sev-critical: #EF4444;
+  --sev-critical-bg: rgba(239, 68, 68, 0.12);
+  --sev-critical-border: rgba(239, 68, 68, 0.28);
+  
+  --sev-high: #F97316;
+  --sev-high-bg: rgba(249, 115, 22, 0.12);
+  --sev-high-border: rgba(249, 115, 22, 0.28);
+  
+  --sev-medium: #EAB308;
+  --sev-medium-bg: rgba(234, 179, 8, 0.12);
+  --sev-medium-border: rgba(234, 179, 8, 0.28);
+  
+  --sev-low: #3B82F6;
+  --sev-low-bg: rgba(59, 130, 246, 0.12);
+  --sev-low-border: rgba(59, 130, 246, 0.28);
+  
+  --sev-info: #64748B;
+  --sev-info-bg: rgba(100, 116, 139, 0.12);
+  --sev-info-border: rgba(100, 116, 139, 0.28);
+
+  --status-success: #22C55E;
+  --status-success-bg: rgba(34, 197, 94, 0.12);
+  --status-success-border: rgba(34, 197, 94, 0.28);
+
+  --radius-card: 12px;
+  --radius-pill: 9999px;
+  --radius-btn: 8px;
+  --spacing-unit: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+/* Global Font & Smooth Layout */
+html, body, [class*="css"] {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-main) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* =============================================================================
+   MAIN VIEWPORT & CONTAINER SPACING
+   ============================================================================= */
+header[data-testid="stHeader"] {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  z-index: 99 !important;
+  pointer-events: none !important;
+}
+
+header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"] {
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 6px !important;
+  left: 8px !important;
+  z-index: 100 !important;
+  background: rgba(21, 31, 50, 0.90) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  color: var(--text-muted) !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+header[data-testid="stHeader"] [data-testid="stToolbar"] {
+  pointer-events: auto !important;
+}
+
+/* Main Container Spacing - Compact 10px top padding, 28px horizontal */
+.block-container {
+  padding-top: 10px !important;
+  padding-bottom: 32px !important;
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Collapse empty Streamlit element containers to eliminate vertical gaps */
+.element-container:has(style:only-child),
+.element-container:empty,
+.stMarkdown:empty,
+[data-testid="stElementContainer"]:has(style:only-child),
+[data-testid="stElementContainer"]:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+}
+
+/* =============================================================================
+   STRUCTURED TOP NAVIGATION BAR (APP HEADER)
+   ============================================================================= */
+.vx-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #101827 0%, #151F32 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 10px 18px;
+  min-height: 52px;
+  height: auto;
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.20);
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.vx-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  line-height: 1;
+}
+
+.vx-topbar-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-violet) 100%);
+  border-radius: 6px;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.vx-topbar-brand {
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: -0.01em;
+  font-size: 0.86rem;
+  line-height: 1;
+}
+
+.vx-topbar-sep {
+  color: #334155;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.vx-topbar-section {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.70rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.vx-topbar-page {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.84rem;
+  line-height: 1;
+}
+
+.vx-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vx-topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-card-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 0 12px;
+  height: 30px;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.vx-topbar-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(66, 133, 255, 0.10);
+  border: 1px solid rgba(66, 133, 255, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 0 12px;
+  height: 30px;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.vx-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--highlight-cyan);
+  box-shadow: 0 0 8px var(--highlight-cyan);
+  display: inline-block;
+  animation: vx-pulse 2s infinite;
+}
+
+@keyframes vx-pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(53, 198, 232, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(53, 198, 232, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(53, 198, 232, 0); }
+}
+
+/* =============================================================================
+   SIDEBAR NAVIGATION SYSTEM
+   ============================================================================= */
+[data-testid="stSidebar"] {
+  background-color: var(--bg-sidebar) !important;
+  border-right: 1px solid var(--border-color) !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  width: 260px !important;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 8px 10px 14px 10px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Subtle, non-intrusive scrollbar */
+[data-testid="stSidebar"]::-webkit-scrollbar,
+[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
+  width: 3px;
+}
+[data-testid="stSidebar"]::-webkit-scrollbar-track,
+[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-testid="stSidebar"]::-webkit-scrollbar-thumb,
+[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
+  background: rgba(66, 133, 255, 0.2);
+  border-radius: 3px;
+}
+[data-testid="stSidebar"]:hover::-webkit-scrollbar-thumb,
+[data-testid="stSidebar"] > div:first-child:hover::-webkit-scrollbar-thumb {
+  background: rgba(66, 133, 255, 0.35);
+}
+
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+  gap: 0.25rem !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
+  gap: 0.25rem !important;
+}
+
+/* Suppress all floating tooltips/popovers inside sidebar that obstruct buttons */
+[data-testid="stSidebar"] div[role="tooltip"],
+[data-testid="stSidebar"] [data-baseweb="tooltip"],
+[data-testid="stSidebar"] div[data-baseweb="popover"]:has([role="tooltip"]) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* =============================================================================
+   0. SIDEBAR TOP GAP FIX
+   Streamlit reserves a tall header band (logo spacer + native collapse arrow)
+   and extra padding above the first sidebar item. VulnX has its own
+   Collapse Sidebar control, so remove the band and start content at the top.
+   ============================================================================= */
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"],
+[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 8px !important;
+}
+
+/* Streamlit gives markdown blocks a negative bottom margin (-1rem) which pulls the
+   next sidebar element up over section titles. Cancel it so titles keep their gap. */
+[data-testid="stSidebar"] [data-testid="stMarkdown"],
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+[data-testid="stSidebar"] .stMarkdown {
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stElementContainer"],
+[data-testid="stSidebar"] .stElementContainer,
+[data-testid="stSidebar"] .element-container {
+  margin-bottom: 0 !important;
+}
+
+/* Ensure the first child of the sidebar starts flush at the top */
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* =============================================================================
+   1. COMPACT ADMIN PANEL NAVIGATION ITEM (TOP)
+   ============================================================================= */
+.st-key-nav_btn_top_admin button {
+  background: rgba(66, 133, 255, 0.10) !important;
+  border: 1px solid rgba(66, 133, 255, 0.35) !important;
+  color: #F8FAFC !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 12px !important;
+  border-radius: 7px !important;
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: relative !important;
+  transition: all 0.16s ease-in-out !important;
+}
+
+.st-key-nav_btn_top_admin button:hover {
+  background: rgba(66, 133, 255, 0.18) !important;
+  border-color: var(--primary-blue) !important;
+}
+
+.st-key-nav_btn_top_admin button::after {
+  content: "ADMIN";
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  background: rgba(66, 133, 255, 0.22);
+  color: #35C6E8;
+  border: 1px solid rgba(53, 198, 232, 0.40);
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.st-key-nav_btn_top_admin_collapsed button {
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 !important;
+  margin-bottom: 6px !important;
+}
+
+/* =============================================================================
+   2. VULNX BRANDING (COMPACT)
+   ============================================================================= */
+.vx-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px 10px 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-top: 8px;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.vx-brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-violet) 50%, var(--highlight-cyan) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(66, 133, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.vx-brand-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vx-brand-title {
+  font-weight: 700;
+  font-size: 0.96rem;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+}
+
+.vx-brand-badge {
+  display: inline-block;
+  background: rgba(66, 133, 255, 0.16);
+  color: var(--primary-blue);
+  border: 1px solid rgba(66, 133, 255, 0.35);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.vx-brand-subtitle {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =============================================================================
+   3. ACTIVE TARGET SCOPE (COMPACT)
+   ============================================================================= */
+.vx-scope-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 14px !important;
+  margin-bottom: 6px !important;
+  padding: 0 4px !important;
+}
+
+.vx-scope-title {
+  color: #64748B;
+}
+
+.vx-scope-empty {
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  padding: 8px 10px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: 7px;
+  margin-bottom: 12px;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] {
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+}
+
+[data-testid="stSidebar"] [data-baseweb="select"] > div:first-child {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 7px !important;
+  min-height: 38px !important;
+  height: 38px !important;
+  padding: 0 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-testid="stSidebar"] [data-baseweb="select"] > div:first-child:hover {
+  border-color: var(--primary-blue) !important;
+}
+
+[data-testid="stSidebar"] [data-baseweb="select"] * {
+  color: #F8FAFC !important;
+  font-size: 0.83rem !important;
+  font-weight: 600 !important;
+}
+
+[data-testid="stSidebar"] [data-baseweb="select"] svg {
+  fill: #94A3B8 !important;
+}
+
+/* =============================================================================
+   4. NAVIGATION SECTION HEADINGS & STRICT LEFT-ALIGNED BUTTONS
+   ============================================================================= */
+.vx-nav-section-title {
+  font-size: 0.64rem !important;
+  font-weight: 700 !important;
+  color: #64748B !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.09em !important;
+  margin-top: 16px !important;
+  margin-bottom: 6px !important;
+  padding: 0 6px !important;
+  display: block !important;
+  line-height: 1.2 !important;
+}
+
+/* Sidebar Nav Button Overrides - Force Left Alignment for all buttons */
+[data-testid="stSidebar"] button {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 12px !important;
+  border-radius: 7px !important;
+  font-size: 0.83rem !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  letter-spacing: -0.01em !important;
+  transition: all 0.15s ease-in-out !important;
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+}
+
+/* Force all inner elements of sidebar buttons to align left */
+[data-testid="stSidebar"] button * {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+[data-testid="stSidebar"] button > div,
+[data-testid="stSidebar"] button > div > div,
+[data-testid="stSidebar"] button div,
+[data-testid="stSidebar"] button p,
+[data-testid="stSidebar"] button span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 0.83rem !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+[data-testid="stSidebar"] button[kind="secondary"],
+[data-testid="stSidebar"] button[data-testid*="secondary"],
+[data-testid="stSidebar"] button[data-testid*="Secondary"] {
+  background-color: transparent !important;
+  color: #94A3B8 !important;
+  border: 1px solid transparent !important;
+  font-weight: 500 !important;
+}
+
+[data-testid="stSidebar"] button[kind="secondary"]:hover,
+[data-testid="stSidebar"] button[data-testid*="secondary"]:hover,
+[data-testid="stSidebar"] button[data-testid*="Secondary"]:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-testid="stSidebar"] button[kind="primary"],
+[data-testid="stSidebar"] button[data-testid*="primary"],
+[data-testid="stSidebar"] button[data-testid*="Primary"] {
+  background: rgba(66, 133, 255, 0.14) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(66, 133, 255, 0.35) !important;
+  border-left: 3px solid var(--primary-blue) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 4px rgba(66, 133, 255, 0.15) !important;
+}
+
+/* =============================================================================
+   4b. ACTIVE TARGET SCOPE SELECTBOX (Streamlit 1.4x+ combobox, not BaseWeb)
+   The selectbox renders an <input> (selected value) plus "Clear"/"Open" <button>s.
+   The generic sidebar nav-button rules above (width:100%, height:36px, flex)
+   were hitting those inner buttons and squeezing the input to zero width, which
+   hid the selected target name. Reset them here with higher specificity.
+   ============================================================================= */
+[data-testid="stSidebar"] [data-testid="stSelectbox"] button {
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 0 0 28px !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] button *,
+[data-testid="stSidebar"] [data-testid="stSelectbox"] button div,
+[data-testid="stSidebar"] [data-testid="stSelectbox"] button span {
+  width: auto !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] div:has(> input) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  min-height: 38px !important;
+  padding: 0 6px 0 10px !important;
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 7px !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] div:has(> input):hover,
+[data-testid="stSidebar"] [data-testid="stSelectbox"] div:has(> input):focus-within {
+  border-color: var(--primary-blue) !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] input {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 36px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  opacity: 1 !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  text-overflow: ellipsis !important;
+  cursor: pointer !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stSelectbox"] svg {
+  fill: #94A3B8 !important;
+  color: #94A3B8 !important;
+}
+
+/* =============================================================================
+   5. BOTTOM ACCOUNT SECTION & SIGN OUT
+   ============================================================================= */
+.vx-user-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 18px !important;
+  margin-bottom: 8px !important;
+}
+
+.vx-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-violet) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.vx-user-card-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+.vx-user-card-name {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vx-user-card-role {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vx-role-pill {
+  display: inline-block;
+  background: rgba(66, 133, 255, 0.15);
+  color: var(--primary-blue);
+  border: 1px solid rgba(66, 133, 255, 0.30);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 0.58rem;
+  font-weight: 600;
+}
+
+.vx-version-tag {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* Cards & Surfaces */
+.vx-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.vx-card:hover {
+  border-color: #2F3E60;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.vx-card-secondary {
+  background-color: var(--bg-card-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.vx-card-secondary:hover {
+  border-color: #2F3E60;
+}
+
+/* Remediation Progress Bar */
+.vx-progress-track {
+  width: 100%;
+  height: 8px;
+  background-color: #101827;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  margin: 10px 0;
+}
+
+.vx-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4285FF 0%, #35C6E8 100%);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* KPI Cards with Left Severity Accent Border */
+.vx-kpi-card {
+  background: linear-gradient(180deg, #162035 0%, #121A2B 100%);
+  border: 1px solid #23304B;
+  border-left: 4px solid var(--primary-blue);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  height: 100%;
+  min-height: 132px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Make every KPI card in a row the same height (Streamlit columns do not stretch by default) */
+[data-testid="stHorizontalBlock"]:has(.vx-kpi-card) {
+  align-items: stretch !important;
+}
+[data-testid="stColumn"]:has(.vx-kpi-card) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+[data-testid="stColumn"]:has(.vx-kpi-card) > [data-testid="stVerticalBlock"],
+[data-testid="stColumn"]:has(.vx-kpi-card) [data-testid="stElementContainer"],
+[data-testid="stColumn"]:has(.vx-kpi-card) [data-testid="stMarkdown"],
+[data-testid="stColumn"]:has(.vx-kpi-card) [data-testid="stMarkdownContainer"] {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 0 !important;
+}
+[data-testid="stColumn"]:has(.vx-kpi-card) [data-testid="stMarkdown"] > div {
+  align-items: stretch !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+}
+[data-testid="stColumn"]:has(.vx-kpi-card) [data-testid="stMarkdownContainer"] {
+  width: 100% !important;
+}
+[data-testid="stColumn"]:has(.vx-kpi-card) .vx-kpi-card {
+  flex: 1 1 auto !important;
+  height: 100% !important;
+}
+
+.vx-kpi-card:hover {
+  border-color: #3B82F6;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40);
+  transform: translateY(-2px);
+}
+
+.vx-kpi-card.critical { border-left-color: var(--sev-critical); }
+.vx-kpi-card.high     { border-left-color: var(--sev-high); }
+.vx-kpi-card.medium   { border-left-color: var(--sev-medium); }
+.vx-kpi-card.low      { border-left-color: var(--sev-low); }
+.vx-kpi-card.info     { border-left-color: var(--sev-info); }
+.vx-kpi-card.accent   { border-left-color: var(--accent-indigo); }
+.vx-kpi-card.success  { border-left-color: var(--status-success); }
+.vx-kpi-card.cyan     { border-left-color: var(--highlight-cyan); }
+
+.vx-kpi-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.vx-kpi-value {
+  font-size: 2.15rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+  margin: 6px 0 4px 0;
+}
+
+.vx-kpi-sub {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #94A3B8;
+  margin-top: auto;
+  padding-top: 6px;
+  min-height: 28px;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Scanner Status Pills */
+.vx-health-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.vx-health-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.vx-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.vx-status-dot.online {
+  background-color: var(--status-success);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.vx-status-dot.warning {
+  background-color: var(--sev-medium);
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
+}
+
+.vx-status-dot.offline {
+  background-color: var(--sev-critical);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Severity Pill Badges */
+.vx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.vx-badge-critical {
+  background-color: var(--sev-critical-bg);
+  color: var(--sev-critical);
+  border: 1px solid var(--sev-critical-border);
+}
+
+.vx-badge-high {
+  background-color: var(--sev-high-bg);
+  color: var(--sev-high);
+  border: 1px solid var(--sev-high-border);
+}
+
+.vx-badge-medium {
+  background-color: var(--sev-medium-bg);
+  color: var(--sev-medium);
+  border: 1px solid var(--sev-medium-border);
+}
+
+.vx-badge-low {
+  background-color: var(--sev-low-bg);
+  color: var(--sev-low);
+  border: 1px solid var(--sev-low-border);
+}
+
+.vx-badge-info {
+  background-color: var(--sev-info-bg);
+  color: var(--sev-info);
+  border: 1px solid var(--sev-info-border);
+}
+
+.vx-badge-success {
+  background-color: var(--status-success-bg);
+  color: var(--status-success);
+  border: 1px solid var(--status-success-border);
+}
+
+.vx-badge-neutral {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+/* Empty State Widget */
+.vx-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  background-color: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-card);
+  margin: 12px 0;
+}
+
+.vx-empty-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
+.vx-empty-title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.vx-empty-desc {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  max-width: 440px;
+}
+
+/* Page Section Headers — Unified Top Rhythm */
+.vx-header {
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.vx-header-title {
+  font-size: 1.40rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 7px !important;
+  display: flex;
+  align-items: center;
+}
+
+.vx-header-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Overview Unified Header Bar */
+.vx-overview-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.vx-overview-header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-overview-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px !important;
+}
+
+.vx-overview-title {
+  font-size: 1.40rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.vx-overview-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Typography & Section Heading Rhythm */
+h1, [data-testid="stHeading"] h1 {
+  font-size: 1.40rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.025em !important;
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  line-height: 1.25 !important;
+}
+
+h2, [data-testid="stHeading"] h2 {
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.02em !important;
+  margin-top: 24px !important;
+  margin-bottom: 10px !important;
+  line-height: 1.3 !important;
+}
+
+h3, [data-testid="stHeading"] h3 {
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.015em !important;
+  margin-top: 18px !important;
+  margin-bottom: 8px !important;
+  line-height: 1.35 !important;
+}
+
+h4, [data-testid="stHeading"] h4 {
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+  margin-top: 16px !important;
+  margin-bottom: 8px !important;
+  line-height: 1.4 !important;
+}
+
+.vx-overview-health-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vx-overview-health-bar .vx-health-pill {
+  padding: 4px 10px;
+  font-size: 0.74rem;
+}
+
+/* Centered Dashboard Empty Card */
+.vx-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px 20px 24px;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  margin-bottom: 12px;
+}
+
+.vx-empty-icon-shield {
+  font-size: 2.3rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 14px rgba(99, 102, 241, 0.45));
+}
+
+.vx-empty-card .vx-empty-title {
+  font-size: 1.10rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.vx-empty-card .vx-empty-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 440px;
+}
+
+/* Remove unwanted floating Deploy control and Streamlit deployment badges */
+[data-testid="stDeployButton"],
+.stDeployButton,
+[data-testid="stToolbar"] button[title*="Deploy"],
+[data-testid="stToolbar"] [data-testid="stBaseButton-header"],
+button[data-testid="stBaseButton-header"],
+div[data-testid="stToolbar"] > div:has(button[title*="Deploy"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Assessment Summary Banner */
+.vx-summary-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.vx-summary-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-summary-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.vx-summary-target {
+  font-size: 1.20rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.vx-summary-meta-grid {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.80rem;
+  color: var(--text-muted);
+}
+
+.vx-summary-meta-item code {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--highlight-cyan);
+}
+
+.vx-meta-lbl {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.vx-badge-lg {
+  font-size: 0.80rem !important;
+  padding: 6px 14px !important;
+}
+
+/* Enterprise Assessment Wizard Step Cards */
+.vx-wizard-steps-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.vx-wizard-step {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  transition: all 0.15s ease-in-out;
+}
+
+.vx-wizard-step.active {
+  border-color: var(--primary-blue);
+  background: linear-gradient(135deg, rgba(66, 133, 255, 0.12) 0%, rgba(21, 31, 50, 0.8) 100%);
+  box-shadow: 0 0 14px rgba(66, 133, 255, 0.18);
+}
+
+.vx-wizard-step-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.vx-wizard-step.active .vx-wizard-step-tag {
+  color: var(--primary-blue);
+}
+
+.vx-wizard-step-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-top: 3px;
+}
+
+.vx-wizard-step-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.vx-wizard-arrow {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Segmented Radio / Workspace Mode Switcher */
+div[data-testid="stRadio"] > label {
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dim) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  margin-bottom: 8px !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] {
+  display: inline-flex !important;
+  background-color: var(--bg-card-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-btn) !important;
+  padding: 4px !important;
+  gap: 4px !important;
+  flex-wrap: wrap !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+  color: var(--text-primary) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+div[data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+  background: var(--bg-card) !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  border: 1px solid var(--primary-blue) !important;
+  box-shadow: 0 2px 8px rgba(66, 133, 255, 0.20) !important;
+}
+
+/* Tabs Styled Like Segmented Controls */
+.stTabs [data-baseweb="tab-list"] {
+  background-color: #0E1424 !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
+  border: 1px solid var(--border-color) !important;
+  gap: 4px !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+  border-radius: 8px !important;
+  color: var(--text-muted) !important;
+  font-weight: 500 !important;
+  font-size: 0.86rem !important;
+  padding: 7px 16px !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.stTabs [aria-selected="true"] {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.stTabs [data-baseweb="tab-highlight"] {
+  display: none !important;
+}
+
+/* Table and DataFrame Customization */
+[data-testid="stDataFrame"] {
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-card) !important;
+  overflow: hidden !important;
+  background-color: var(--bg-card) !important;
+}
+
+/* Expander Styling */
+[data-testid="stExpander"] {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-card) !important;
+  margin-bottom: 12px !important;
+}
+
+[data-testid="stExpander"] details {
+  border-radius: var(--radius-card) !important;
+}
+
+/* Button Refinement */
+button[kind="primary"] {
+  background-color: var(--accent-indigo) !important;
+  color: #FFFFFF !important;
+  border-radius: var(--radius-btn) !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: all 0.15s ease !important;
+}
+
+button[kind="primary"]:hover {
+  background-color: #4F46E5 !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4) !important;
+}
+
+button[kind="secondary"] {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-btn) !important;
+  font-weight: 500 !important;
+}
+
+button[kind="secondary"]:hover {
+  border-color: var(--accent-indigo) !important;
+  background-color: var(--bg-card-hover) !important;
+}
+
+
+
+/* =============================================================================
+   PART 1: CINEMATIC ENTERPRISE LOGIN PAGE (#080D1A, #151F32, #4285FF, #795BFF)
+   ============================================================================= */
+
+/* Glassmorphism Login Card applied directly to stForm */
+[data-testid="stForm"] {
+  background: rgba(21, 31, 50, 0.85) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(66, 133, 255, 0.22) !important;
+  border-radius: 16px !important;
+  padding: 24px 28px 20px 28px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(66, 133, 255, 0.1) !important;
+}
+
+.vx-login-hero-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 20px 0 0;
+}
+
+.vx-login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(66, 133, 255, 0.12);
+  border: 1px solid rgba(66, 133, 255, 0.35);
+  color: #35C6E8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+.vx-login-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E6EAF2 45%, #795BFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.vx-login-subtitle {
+  font-size: 0.88rem;
+  color: #8A94AD;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.vx-login-headline {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.vx-login-desc {
+  font-size: 0.80rem;
+  color: #8A94AD;
+  line-height: 1.45;
+  margin-bottom: 10px;
+  max-width: 480px;
+}
+
+/* 3D Shield Art Container */
+.vx-shield-art-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: 135px;
+  margin: 6px 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.vx-shield-svg {
+  filter: drop-shadow(0 0 25px rgba(66, 133, 255, 0.40)) drop-shadow(0 0 45px rgba(121, 91, 255, 0.30));
+  animation: vx-float 6s ease-in-out infinite;
+  max-height: 130px;
+}
+
+@keyframes vx-float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-5px) scale(1.01); }
+}
+
+@keyframes vx-scan-line {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.vx-login-features-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.vx-login-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(21, 31, 50, 0.7);
+  border: 1px solid rgba(35, 44, 69, 0.8);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #E6EAF2;
+  transition: all 0.2s ease;
+}
+
+.vx-login-feature-item:hover {
+  border-color: #4285FF;
+  background: rgba(66, 133, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.vx-login-form-header {
+  margin-bottom: 14px;
+}
+
+.vx-glass-login-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+
+.vx-glass-login-sub {
+  font-size: 0.80rem;
+  color: #8A94AD;
+  margin-bottom: 0;
+}
+
+/* Gradient Primary Button */
+.vx-gradient-btn {
+  background: linear-gradient(135deg, #4285FF 0%, #795BFF 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: 9px !important;
+  padding: 10px 24px !important;
+  box-shadow: 0 4px 18px rgba(66, 133, 255, 0.35) !important;
+  transition: all 0.2s ease-in-out !important;
+  width: 100% !important;
+}
+
+.vx-gradient-btn:hover {
+  background: linear-gradient(135deg, #5394FF 0%, #8A6DFF 100%) !important;
+  box-shadow: 0 6px 24px rgba(121, 91, 255, 0.5) !important;
+  transform: translateY(-1px) !important;
+}
+
+.vx-auth-notice {
+  font-size: 0.68rem;
+  color: #626D87;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.35;
+}
+
+/* =============================================================================
+   PART 2: GLOBAL MULTI-ASSET ATTACK GRAPH ENHANCEMENTS
+   ============================================================================= */
+
+.vx-graph-mode-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #141B2D;
+  border: 1px solid #232C45;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+}
+
+.vx-graph-cluster-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.vx-graph-stats-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .vx-graph-stats-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Danger Zone & Destructive Actions */
+.vx-danger-zone {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-top: 20px;
+  margin-bottom: 24px;
+}
+
+.vx-danger-badge {
+  display: inline-block;
+  background: rgba(239, 68, 68, 0.18);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.vx-modal-warning-box {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.vx-modal-preserve-box {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+/* =============================================================================
+   STREAMLIT FILE UPLOADER & SELECTED FILE COMPONENT STYLING
+   ============================================================================= */
+[data-testid="stFileUploader"] {
+  background-color: var(--bg-card) !important;
+  border-radius: var(--radius-card) !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 12px 14px !important;
+  margin-bottom: 12px !important;
+}
+
+[data-testid="stFileUploaderDropzone"] {
+  background-color: var(--bg-card-secondary) !important;
+  border: 2px dashed rgba(66, 133, 255, 0.4) !important;
+  border-radius: 8px !important;
+  padding: 20px 16px !important;
+  text-align: center !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+[data-testid="stFileUploaderDropzone"]:hover {
+  border-color: var(--primary-blue) !important;
+  background-color: var(--bg-card-hover) !important;
+  box-shadow: 0 0 16px rgba(66, 133, 255, 0.15) !important;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] {
+  color: var(--text-primary) !important;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] span,
+[data-testid="stFileUploaderDropzoneInstructions"] div {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] small {
+  color: var(--text-muted) !important;
+  font-size: 0.78rem !important;
+}
+
+[data-testid="stFileUploader"] button[kind="secondary"] {
+  background-color: rgba(66, 133, 255, 0.12) !important;
+  color: var(--primary-blue) !important;
+  border: 1px solid rgba(66, 133, 255, 0.35) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-btn) !important;
+  padding: 6px 14px !important;
+  transition: all 0.18s ease-in-out !important;
+}
+
+[data-testid="stFileUploader"] button[kind="secondary"]:hover {
+  background-color: var(--primary-blue) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 10px rgba(66, 133, 255, 0.3) !important;
+}
+
+/* Streamlit Native File List Item Inside Uploader */
+[data-testid="stFileUploaderFileData"] {
+  background-color: #101827 !important;
+  border: 1px solid rgba(66, 133, 255, 0.45) !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  margin-top: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-testid="stFileUploaderFileData"] * {
+  color: #F8FAFC !important;
+}
+
+.uploadedFileName,
+[data-testid="stFileUploaderFileName"],
+[data-testid="stFileUploaderFileData"] span,
+[data-testid="stFileUploaderFileData"] small {
+  color: #F8FAFC !important;
+  font-weight: 600 !important;
+  font-size: 0.90rem !important;
+  word-break: break-all !important;
+  max-width: 80% !important;
+}
+
+.uploadedFileSize,
+[data-testid="stFileUploaderFileSize"] {
+  color: #35C6E8 !important;
+  font-size: 0.80rem !important;
+  font-weight: 500 !important;
+  margin-left: 8px !important;
+}
+
+[data-testid="stFileUploaderDeleteBtn"] button,
+button[data-testid="stFileUploaderDeleteBtn"],
+[data-testid="stFileUploader"] button[aria-label*="Delete"],
+[data-testid="stFileUploader"] button[aria-label*="Remove"] {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  color: #EF4444 !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+[data-testid="stFileUploaderDeleteBtn"] button:hover,
+button[data-testid="stFileUploaderDeleteBtn"]:hover,
+[data-testid="stFileUploader"] button[aria-label*="Delete"]:hover {
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+/* Dedicated Selected File Preview Card */
+.vx-file-preview-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #151F32 0%, #1A2740 100%);
+  border: 1px solid rgba(66, 133, 255, 0.4);
+  border-left: 4px solid var(--primary-blue);
+  border-radius: var(--radius-card);
+  padding: 12px 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.vx-file-preview-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.vx-file-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(66, 133, 255, 0.15);
+  border: 1px solid rgba(66, 133, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.vx-file-meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+.vx-file-name {
+  font-weight: 700;
+  font-size: 0.94rem;
+  color: #F8FAFC;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.vx-file-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 0.76rem;
+  color: #94A3B8;
+  flex-wrap: wrap;
+}
+
+.vx-file-type-pill {
+  background: rgba(121, 91, 255, 0.18);
+  color: #B5A1FF;
+  border: 1px solid rgba(121, 91, 255, 0.35);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.vx-file-size-pill {
+  color: #35C6E8;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+
